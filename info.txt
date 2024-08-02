@@ -1,2 +1,8 @@
-gtfs_test.py→ http://docs.gtfs-data.jp/api.v2.html GTFS ファイルの検索を行って、その結果をjsonに保存(今回は福岡県で行った)
-read.py→上で作ったjsonの情報を元に、指定した町名に対応するデータを一括でzip形式にダウンロード、それを解凍する
+gtfs_test.py
+    http://docs.gtfs-data.jp/api.v2.html GTFS ファイルの検索を行って、その結果をjsonに保存(今回は福岡県で行った)
+
+read.py
+    上で作ったjsonの情報を元に、指定した町名に対応するデータを一括でzip形式にダウンロード、それを解凍する
+
+catch.py
+    read.pyでダウンロードし、解凍したデータから、特定のファイルの中身をコンソールに表示する
