@@ -1,0 +1,748 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "GTFS Data Repository API (ベータ公開版)",
+    "version": "2.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.gtfs-data.jp/v2"
+    }
+  ],
+  "paths": {
+    "/files": {
+      "get": {
+        "description": "GTFS ファイルの検索",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP Status Code",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "APIのレスポンスステータスに関するメッセージ",
+                      "example": "ok"
+                    },
+                    "body": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "organization_id": {
+                            "type": "string",
+                            "description": "ユニークな事業者の英語名",
+                            "example": "org1"
+                          },
+                          "organization_name": {
+                            "type": "string",
+                            "description": "事業者の表示名",
+                            "example": "組織1"
+                          },
+                          "organization_web_url": {
+                            "type": "string",
+                            "description": "組織のWebページ",
+                            "example": "https://gtfs-data.jp"
+                          },
+                          "organization_email": {
+                            "type": "string",
+                            "description": "組織の問い合わせ先EMAIL",
+                            "example": "shimpei.matsuura@aigid.jp"
+                          },
+                          "feed_id": {
+                            "type": "string",
+                            "description": "事業者でユニークなGTFSフィードの英語名",
+                            "example": "rosenbus"
+                          },
+                          "feed_name": {
+                            "type": "string",
+                            "description": "GTFSフィードの表示名",
+                            "example": "路線バス"
+                          },
+                          "feed_pref_id": {
+                            "type": "integer",
+                            "description": "フィードの都道府県コード",
+                            "example": 23
+                          },
+                          "feed_license_id": {
+                            "type": "string",
+                            "description": "GTFSのライセンス",
+                            "example": "CC BY 4.0"
+                          },
+                          "feed_license_url": {
+                            "type": "string",
+                            "description": "ライセンスに関するURL",
+                            "example": "https://creativecommons.org/licenses/by/4.0/deed.ja"
+                          },
+                          "feed_url": {
+                            "type": "string",
+                            "description": "フィードのメタデータURL",
+                            "example": "https://api.dev.gtfs-data.jp/v2/organizations/test-org1/feeds/rosenbus"
+                          },
+                          "feed_page_url": {
+                            "type": "string",
+                            "description": "GTFS Data Repositoryのフィード詳細ページのURL",
+                            "example": "https://gtfs-data.jp/search?target_feed=org1*rosenbus"
+                          },
+                          "file_uid": {
+                            "type": "string",
+                            "description": "ファイルのユニークなID",
+                            "example": "f81da530-c0fa-11ed-9c3c-00155d87a925"
+                          },
+                          "file_rid": {
+                            "type": "string",
+                            "description": "ファイルの現在を基準とした世代を表すid\n現在有効なファイルのridはcurrent\n現在未実装で常に\"not_implemented_yet\"が返却される\n１つ前がprev_1\n2つ前がprev_2\n1つ先がnext_1\n2つ先がnext_2",
+                            "example": "current"
+                          },
+                          "file_from_date": {
+                            "type": "string",
+                            "description": "ファイルの有効期限開始日",
+                            "example": "2023-01-01"
+                          },
+                          "file_to_date": {
+                            "type": "string",
+                            "description": "ファイルの有効期限終了日",
+                            "example": "2023-12-31"
+                          },
+                          "file_url": {
+                            "type": "string",
+                            "description": "GTFSファイルダウンロードURL",
+                            "example": "https://api.dev.gtfs-data.jp/v2/organizations/test-org1/feeds/rosenbus/files/feed.zip?rid=current"
+                          },
+                          "file_stop_url": {
+                            "type": "string",
+                            "description": "GTFSファイルに含まれるバス停の位置情報geojson",
+                            "nullable": true,
+                            "example": "https://api.dev.gtfs-data.jp/v2/organizations/test-org1/feeds/rosenbus/files/stops.geojson?rid=current"
+                          },
+                          "file_route_url": {
+                            "type": "string",
+                            "description": "GTFSファイルに含まれるルートの位置情報geojson",
+                            "nullable": true,
+                            "example": "https://api.dev.gtfs-data.jp/v2/organizations/test-org1/feeds/rosenbus/files/routes.geojson?rid=current"
+                          },
+                          "file_tracking_url": {
+                            "type": "string",
+                            "description": "バスの動きデータ",
+                            "nullable": true,
+                            "example": "https://api.dev.gtfs-data.jp/v2/organizations/test-org1/feeds/rosenbus/files/tracking.json?rid=current"
+                          },
+                          "file_last_updated_at": {
+                            "type": "string",
+                            "description": "ファイルの最終更新日時",
+                            "example": "2023-08-18T18:07:54.421207+09:00"
+                          },
+                          "file_published_at": {
+                            "type": "string",
+                            "description": "ファイルの公開日",
+                            "example": "2023-08-18T18:07:54.421207+09:00"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "extent",
+            "style": "form",
+            "explode": false,
+            "description": "GTFS を指定範囲で検索\nminx,miny,max,maxy",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 4,
+              "minItems": 4,
+              "example": [
+                135,
+                35,
+                135.1,
+                35.1
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/pref"
+          },
+          {
+            "in": "query",
+            "name": "target_date",
+            "description": "指定した日付に有効な GTFS の検索\n指定しない場合は現在有効な GTFS が検索される\nall が指定されるとすべての期間で検索する",
+            "schema": {
+              "type": "string",
+              "example": "2021-12-31"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/orgName"
+          },
+          {
+            "$ref": "#/components/parameters/orgId"
+          }
+        ]
+      }
+    },
+    "/feeds": {
+      "get": {
+        "description": "GTFSフィード一覧を取得",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "applicaation/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP Status Code",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "APIのレスポンスステータスに関するメッセージ",
+                      "example": "ok"
+                    },
+                    "body": {
+                      "type": "array",
+                      "description": "結果データ",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "organization_id": {
+                            "type": "string",
+                            "description": "公開組織ID",
+                            "example": "test-org1"
+                          },
+                          "organization_name": {
+                            "type": "string",
+                            "description": "公開組織名",
+                            "example": "組織1"
+                          },
+                          "organization_web_url": {
+                            "type": "string",
+                            "description": "組織のWebページ",
+                            "example": "https://gtfs-data.jp"
+                          },
+                          "organization_email": {
+                            "type": "string",
+                            "description": "組織の問い合わせ先EMAIL",
+                            "example": "shimpei.matsuura@aigid.jp"
+                          },
+                          "feed_id": {
+                            "type": "string",
+                            "description": "フィードのID",
+                            "example": "rosenbus"
+                          },
+                          "feed_name": {
+                            "type": "string",
+                            "description": "フィードの名前",
+                            "example": "路線バス"
+                          },
+                          "feed_license": {
+                            "type": "string",
+                            "description": "GTFSのライセンス",
+                            "example": "CC0 1.0"
+                          },
+                          "feed_license_url": {
+                            "type": "string",
+                            "description": "ライセンスに関するURL",
+                            "example": "https://creativecommons.org/publicdomain/zero/1.0/deed.ja"
+                          },
+                          "feed_pref_id": {
+                            "type": "integer",
+                            "description": "都道府県コード",
+                            "example": 1
+                          },
+                          "feed_memo": {
+                            "type": "string",
+                            "description": "フィードの補足情報",
+                            "example": "市内循環バスで夏のみ運行"
+                          },
+                          "real_time": {
+                            "type": "object",
+                            "description": "GTFS RealTime の URL",
+                            "properties": {
+                              "trip_update_url": {
+                                "type": "string",
+                                "example": "https://..."
+                              },
+                              "vehicle_position_url": {
+                                "type": "string",
+                                "example": "https://..."
+                              },
+                              "alert_url": {
+                                "type": "string",
+                                "example": "https://..."
+                              }
+                            }
+                          },
+                          "last_updated_at": {
+                            "type": "string",
+                            "description": "最終更新日",
+                            "example": "2023-02-01"
+                          },
+                          "latest_feed_start_date": {
+                            "type": "string",
+                            "description": "最新のGTFSファイルの開始日",
+                            "example": "2023-02-01"
+                          },
+                          "latest_feed_end_date": {
+                            "type": "string",
+                            "description": "最新のGTFSファイルの終了日",
+                            "example": "2023-12-31"
+                          },
+                          "latest_published_at": {
+                            "type": "string",
+                            "description": "最も最近公開されたファイルの公開日",
+                            "example": "2023-12-31"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pref"
+          },
+          {
+            "$ref": "#/components/parameters/orgName"
+          },
+          {
+            "$ref": "#/components/parameters/orgId"
+          }
+        ]
+      }
+    },
+    "/organizations/{organization_id}/feeds/{feed_id}": {
+      "get": {
+        "description": "GTFSフィード情報を取得",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "applicaation/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP Status Code",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "APIのレスポンスステータスに関するメッセージ",
+                      "example": "ok"
+                    },
+                    "body": {
+                      "type": "object",
+                      "description": "結果データ",
+                      "properties": {
+                        "feed_id": {
+                          "type": "string",
+                          "description": "フィードのID",
+                          "example": "rosenbus"
+                        },
+                        "feed_name": {
+                          "type": "string",
+                          "description": "フィードの名前",
+                          "example": "路線バス"
+                        },
+                        "organization_id": {
+                          "type": "string",
+                          "description": "公開組織ID",
+                          "example": "test-org1"
+                        },
+                        "organization_name": {
+                          "type": "string",
+                          "description": "公開組織名",
+                          "example": "組織1"
+                        },
+                        "feed_license": {
+                          "type": "string",
+                          "description": "GTFSのライセンス"
+                        },
+                        "feed_license_url": {
+                          "type": "string",
+                          "description": "ライセンスに関するURL"
+                        },
+                        "feed_pref_id": {
+                          "type": "integer",
+                          "description": "都道府県コード"
+                        },
+                        "publisher_name": {
+                          "type": "string",
+                          "description": "GTFS公開元の名称\n自動取り込みのでない場合は事業者の名前"
+                        },
+                        "feed_page_url": {
+                          "type": "string",
+                          "description": "GTFS公開ページ\n自動取り込みでない場合は事業者のWebページ"
+                        },
+                        "real_time": {
+                          "type": "object",
+                          "description": "GTFS RealTime の URL",
+                          "properties": {
+                            "trip_update_url": {
+                              "type": "string"
+                            },
+                            "vehicle_position_url": {
+                              "type": "string"
+                            },
+                            "alert_url": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "max_prev": {
+                          "type": "integer",
+                          "description": "prev_{v} v の最大値"
+                        },
+                        "max_next": {
+                          "type": "integer",
+                          "description": "next_{v} v の最大値"
+                        },
+                        "gtfs_files": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "gtfs_file_uid": {
+                                "type": "string",
+                                "description": "ファイルのユニークなID",
+                                "example": "f81da530-c0fa-11ed-9c3c-00155d87a925"
+                              },
+                              "rid": {
+                                "type": "string",
+                                "description": "ファイルの現在を基準とした世代を表すid\n現在有効なファイルのridはcurrent\n現在未実装で常に\"not_implemented_yet\"が返却される\n１つ前がprev_1\n2つ前がprev_2\n1つ先がnext_1\n2つ先がnext_2",
+                                "example": "current"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "description": "ファイルのアップロード日",
+                                "example": "2023-08-18T18:07:54.421207+09:00"
+                              },
+                              "from_date": {
+                                "type": "string",
+                                "description": "ファイルの有効期限開始日",
+                                "example": "2023-01-01"
+                              },
+                              "to_date": {
+                                "type": "string",
+                                "description": "ファイルの有効期限終了日",
+                                "example": "2023-12-31"
+                              },
+                              "update_type": {
+                                "type": "string",
+                                "description": "未使用項目"
+                              },
+                              "update_info": {
+                                "type": "object",
+                                "description": "更新情報",
+                                "properties": {
+                                  "update_timetable": {
+                                    "type": "boolean",
+                                    "description": "ダイヤ改正の有無"
+                                  },
+                                  "update_routes": {
+                                    "type": "boolean",
+                                    "description": "路線の更新の有無"
+                                  },
+                                  "update_stops": {
+                                    "type": "boolean",
+                                    "description": "バス停の更新の有無"
+                                  },
+                                  "update_fare": {
+                                    "type": "boolean",
+                                    "description": "運賃の更新の有無"
+                                  },
+                                  "update_available_period": {
+                                    "type": "boolean",
+                                    "description": "運行期間の更新の有無"
+                                  },
+                                  "temporary_timetable": {
+                                    "type": "boolean",
+                                    "description": "臨時ダイヤの有無"
+                                  },
+                                  "others": {
+                                    "type": "boolean",
+                                    "description": "その他の更新の有無"
+                                  }
+                                }
+                              },
+                              "memo": {
+                                "type": "string",
+                                "description": "ファイルの補足情報"
+                              },
+                              "gtfs_url": {
+                                "type": "string",
+                                "description": "GTFSファイルダウンロードURL"
+                              },
+                              "metadata_url": {
+                                "type": "string",
+                                "description": "GTFSファイルのメタデータURL"
+                              },
+                              "stop_url": {
+                                "type": "string",
+                                "description": "GTFSファイルに含まれるバス停の位置情報のgeojson"
+                              },
+                              "route_url": {
+                                "type": "string",
+                                "description": "GTFSファイルに含まれるルートの位置情報のgeojson"
+                              },
+                              "tracking_url": {
+                                "type": "string",
+                                "description": "バスの動きデータ"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/organizationId"
+          },
+          {
+            "$ref": "#/components/parameters/feedId"
+          },
+          {
+            "in": "query",
+            "name": "max_prev",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "description": "返却する GTFS ファイルを何世代前まで取得するか。指定しないと過去分は返さない。"
+            }
+          },
+          {
+            "in": "query",
+            "name": "max_next",
+            "schema": {
+              "type": "integer",
+              "description": "返却する GTFS ファイルを何世代先まで取得するか。指定しないとあるものすべてが返る。"
+            }
+          }
+        ]
+      }
+    },
+    "/organizations/{organization_id}/feeds/{feed_id}/files/feed.zip": {
+      "get": {
+        "description": "GTFS ファイルを取得",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/zip": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/organizationId"
+          },
+          {
+            "$ref": "#/components/parameters/feedId"
+          },
+          {
+            "$ref": "#/components/parameters/relId"
+          },
+          {
+            "$ref": "#/components/parameters/gtfsUid"
+          }
+        ]
+      }
+    },
+    "/organizations/{organization_id}/feeds/{feed_id}/files/stops.geojson": {
+      "get": {
+        "description": "GTFS ファイルのバス停を可視化するための GeoJSON",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/organizationId"
+          },
+          {
+            "$ref": "#/components/parameters/feedId"
+          },
+          {
+            "$ref": "#/components/parameters/relId"
+          },
+          {
+            "$ref": "#/components/parameters/gtfsUid"
+          }
+        ]
+      }
+    },
+    "/organizations/{organization_id}/feeds/{feed_id}/files/routes.geojson": {
+      "get": {
+        "description": "GTFS ファイルの経路を可視化するための GeoJSON",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/organizationId"
+          },
+          {
+            "$ref": "#/components/parameters/feedId"
+          },
+          {
+            "$ref": "#/components/parameters/relId"
+          },
+          {
+            "$ref": "#/components/parameters/gtfsUid"
+          }
+        ]
+      }
+    },
+    "/organizations/{organization_id}/feeds/{feed_id}/files/tracking.geojson": {
+      "get": {
+        "description": "GTFS ファイルのバスの動きを可視化するための JSON",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/organizationId"
+          },
+          {
+            "$ref": "#/components/parameters/organizationId"
+          },
+          {
+            "$ref": "#/components/parameters/relId"
+          },
+          {
+            "$ref": "#/components/parameters/gtfsUid"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "relId": {
+        "in": "query",
+        "name": "rid",
+        "description": "current は現在有効な GTFS ファイル、もしくは直近過去をあらわす。\nnext は next_1、next_1 がない場合は current をあらわす。",
+        "schema": {
+          "type": "string",
+          "default": "current",
+          "enum": [
+            "prev_3",
+            "prev_2",
+            "prev_1",
+            "current",
+            "next_1",
+            "next_2",
+            "next_3",
+            "next"
+          ]
+        }
+      },
+      "organizationId": {
+        "in": "path",
+        "name": "organization_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "matsuurabus"
+        }
+      },
+      "feedId": {
+        "in": "path",
+        "name": "feed_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "rosenbus"
+        }
+      },
+      "gtfsName": {
+        "in": "query",
+        "name": "gtfs_name",
+        "schema": {
+          "type": "string",
+          "example": "路線バス"
+        }
+      },
+      "gtfsUid": {
+        "in": "query",
+        "name": "uid",
+        "schema": {
+          "type": "string",
+          "example": "9bb4c4ef-a623-4e07-abd5-d59fd08e762b",
+          "description": "GTFS ファイルを一意に特定する UUID"
+        }
+      },
+      "pref": {
+        "in": "query",
+        "name": "pref",
+        "description": "フィードの都道府県コードで検索",
+        "schema": {
+          "type": "integer",
+          "example": 23
+        }
+      },
+      "orgName": {
+        "in": "query",
+        "name": "org_name",
+        "description": "公開元組織名(前方一致)",
+        "schema": {
+          "type": "string",
+          "example": "AIGID交通"
+        }
+      },
+      "orgId": {
+        "in": "query",
+        "name": "org_id",
+        "description": "組織ID(完全一致)",
+        "schema": {
+          "type": "string",
+          "example": "aigid"
+        }
+      }
+    }
+  }
+}
