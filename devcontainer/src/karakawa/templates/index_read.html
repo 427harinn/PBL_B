@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フィード取得システム</title>
+</head>
+
+<body>
+    <h1>フィード取得システム</h1>
+    <form action="/get_feed" method="POST">
+        <label for="organization_name">組織名を選択してください:</label>
+        <select id="organization_name" name="organization_name">
+            {% for organization_name in organization_names %}
+            <option value="{{ organization_name }}">{{ organization_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">取得</button>
+    </form>
+</body>
+
+</html>
