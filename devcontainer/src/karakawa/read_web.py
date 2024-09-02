@@ -12,7 +12,10 @@ def index():
     # JSONファイルを読み込んで、organization_nameのリストを取得
     with open('response_data.json', 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
-        organization_names = [item['organization_name'] for item in data['body']]
+        # organization_nameのリストをセットに変換して重複を削除
+        organization_names = list(set(item['organization_name'] for item in data['body']))
+        # アルファベット順にソート
+        organization_names.sort()
     
     return render_template('index_read.html', organization_names=organization_names)
 
@@ -33,6 +36,7 @@ def get_feed():
         if item['organization_name'] == target_organization_name:
             organization_id = item['organization_id']
             feed_id = item['feed_id']
+            print(f"Selected organization_id: {organization_id}, feed_id: {feed_id}")
             break
 
     if organization_id and feed_id:
@@ -49,17 +53,24 @@ def get_feed():
             'Authorization': f'Bearer {api_key}'
         }
 
+        # 最終的なURLを表示
+        print(f"Final Request URL: {feed_url}")
+
         # フィード情報を取得するGETリクエストを送信
         response = requests.get(feed_url, headers=headers)
 
         if response.status_code == 200:
-            zip_filename = 'feed.zip'
+            # karakawaフォルダにファイルを保存するパスを指定
+            save_folder = 'karakawa'
+            os.makedirs(save_folder, exist_ok=True)
+            zip_filename = os.path.join(save_folder, 'feed.zip')
+
             with open(zip_filename, 'wb') as file:
                 file.write(response.content)
             
             # ZIPファイルを解凍
             with zipfile.ZipFile(zip_filename, 'r') as zip_ref:
-                zip_ref.extractall('extracted_files')
+                zip_ref.extractall(os.path.join(save_folder, 'extracted_files'))
 
             return send_file(zip_filename, as_attachment=True)
         else:
