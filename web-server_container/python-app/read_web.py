@@ -5,7 +5,7 @@ import zipfile
 import os
 import csv
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder='../nginx/html')
 
 def process_extracted_files_for_routes(extracted_folder):
     """ 解凍されたファイルからroutes.txtを探し、route_long_nameを取得 """
@@ -59,7 +59,7 @@ def index():
 
     organization_names = sorted(organization_names)
     
-    return render_template('index_read.html', organization_names=organization_names, feed_data=feed_data)
+    return render_template('index.html', organization_names=organization_names, feed_data=feed_data)
 
 @app.route('/get_feed', methods=['POST'])
 def get_feed():
