@@ -8,7 +8,8 @@ import csv
 app = Flask(__name__)
 
 def process_extracted_files_for_routes(extracted_folder):
-    #ルート選択画面の処理　パスワードを付けたりしたい場合はここで処理を書くといいかも
+    """ 解凍されたファイルからroutes.txtを探し、route_long_nameを取得 """
+    
     routes_file_path = None
     route_long_names = []
 
@@ -33,6 +34,8 @@ def process_extracted_files_for_routes(extracted_folder):
 
 @app.route('/')
 def index():
+    """ 初期画面: 組織とフィードを選択する画面を表示 """
+    
     # JSONファイルを読み込んで、organization_nameのリストとfeed_dataを取得
     with open('response_data.json', 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
@@ -60,6 +63,8 @@ def index():
 
 @app.route('/get_feed', methods=['POST'])
 def get_feed():
+    """ 選択されたフィードのZIPファイルを取得し、解凍してルート情報を表示 """
+    
     target_organization_id = request.form['organization_id']
     target_feed_id = request.form['feed_name']
 
@@ -116,13 +121,14 @@ def get_feed():
 
 @app.route('/process_route', methods=['POST'])
 def process_route():
+    """ 選択されたルートと運行ステータスに基づいて次の処理を行う """
+    
     selected_route = request.form['route_long_name']
     operation_status = request.form['operation_status']
     
     # 選択されたルートと運行ステータスに基づいて次の処理を行う
     # ここに処理内容を追加します
     return f'Selected route_long_name: {selected_route}, Operation status: {operation_status}'
-
 
 if __name__ == '__main__':
     app.run(debug=True)
