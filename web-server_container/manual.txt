@@ -1,16 +1,15 @@
-1. "docker-compose.yml"を自分の好きなディレクトリに配置する。
+1. "web-server_container"フォルダをvscodeの新しいウインドウで開く。
 
-2. コマンドラインで、docker-compose.ymlファイルがあるディレクトリに移動する。
+2. vscodeのターミナルで、"docker-compose up -d"コマンドを叩く。 
 
-3. 移動したディレクトリで"docker-compose up -d"コマンドを叩く。
+3. エラーが発生するが一旦無視して、コマンドを実行したディレクトリを確認すると、いくつかディレクトリができているはず。
 
-4. エラーが発生するが一旦無視して、コマンドを実行したディレクトリを確認すると、いくつかディレクトリができているはず。
+4. 生成されたディレクトリのnginx/con.dにdefault.confを配置する。(用意しているものを使用してねぇ)
+   ※ nginx/conf.dにdefault.confが作成されている場合は一旦削除してからファイル移動してくださいな。
 
-5. 生成されたディレクトリのnginx/con.dにでdefault.confを配置する。(用意しているものを使用してねぇ)
+5. nginx/htmlディレクトリにindex.htmlを配置する。(用意しているものを使用するか、自分で好きなhtmlファイルを使用してねぇ)
 
-6. nginx/htmlディレクトリにindex.htmlを配置する。(用意しているものを使用するか、自分で好きなhtmlファイルを使用してねぇ)
+6. もう一度"docker-compose up -d"コマンドを叩く。
 
-7. もう一度"docker-compose up -d"コマンドを叩く。
-
-8. localhost:8080にNginxのWebサーバ、localhost:8888にmysql_adminのログインページが立ち上がっている。(はず！)
+7. localhost:8080にNginxのWebサーバ、localhost:8888にmysql_adminのログインページが立ち上がっている。(はず！)
 
