@@ -181,3 +181,5 @@ pyrightconfig.json
 
 # Ignore files under the extracted_files directory
 extracted_files/
+.DS_Store
+devcontainer/.DS_Store
