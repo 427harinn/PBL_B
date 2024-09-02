@@ -9,7 +9,9 @@
 
 5. nginx/htmlディレクトリにindex.htmlを配置する。(用意しているものを使用するか、自分で好きなhtmlファイルを使用してねぇ)
 
-6. もう一度"docker-compose up -d"コマンドを叩く。
+6. library.txtをpython-appフォルダに配置する。
 
-7. localhost:8080にNginxのWebサーバ、localhost:8888にmysql_adminのログインページが立ち上がっている。(はず！)
+7. もう一度"docker-compose up -d"コマンドを叩く。
+
+8. localhost:8080にNginxのWebサーバ、localhost:8888にmysql_adminのログインページが立ち上がっている。(はず！)
 
