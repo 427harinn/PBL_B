@@ -33,3 +33,11 @@ services:
     restart: always
     ports: ["8080:80"]
     depends_on: ["php"]
+
+  python:
+    image: python:3.12
+    volumes:
+      - ./python-app:/app
+    working_dir: /app
+    #command: python your_script.py  # スクリプトやコマンドを指定
+    restart: always
