@@ -39,5 +39,5 @@ services:
     volumes:
       - ./python-app:/app
     working_dir: /app
-    #command: python your_script.py  # スクリプトやコマンドを指定
+    command: bash -c "pip install -r library.txt"
     restart: always
