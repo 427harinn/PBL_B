@@ -1,8 +1,13 @@
 gtfs_test.py
     http://docs.gtfs-data.jp/api.v2.html GTFS ファイルの検索を行って、その結果をjsonに保存(今回は福岡県で行った)
+    実行例）PBL_B % python ./karakawa/gtfs_test.py hukuoka
 
 read.py
     上で作ったjsonの情報を元に、指定した町名に対応するデータを一括でzip形式にダウンロード、それを解凍する
+    実行例）PBL_B % python ./karakawa/read.py
+           Enter the organization name: 芦屋町
 
 catch.py
     read.pyでダウンロードし、解凍したデータから、特定のファイルの中身をコンソールに表示する
+    実行例）PBL_B % python ./catch.py
+           ファイル名を入力してください： agency.txt
