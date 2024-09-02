@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Operation Status for Routes</title>
+</head>
+
+<body>
+    <h1>Select Operation Status for Each Route</h1>
+    <form action="/process_routes" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Route Long Name</th>
+                    <th>Operation Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for route in route_long_names %}
+                <tr>
+                    <td>{{ route }}</td>
+                    <td>
+                        <label>
+                            <input type="radio" name="status_{{ loop.index0 }}" value="normal" checked>
+                            通常運行
+                        </label>
+                        <label>
+                            <input type="radio" name="status_{{ loop.index0 }}" value="suspended">
+                            運休
+                        </label>
+                        <input type="hidden" name="route_name_{{ loop.index0 }}" value="{{ route }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+
+</html>

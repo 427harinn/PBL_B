@@ -5,7 +5,7 @@ import zipfile
 import os
 import csv
 
-app = Flask(__name__,template_folder='../nginx/html')
+app = Flask(__name__)
 
 def process_extracted_files_for_routes(extracted_folder):
     """ 解凍されたファイルからroutes.txtを探し、route_long_nameを取得 """
@@ -34,7 +34,7 @@ def process_extracted_files_for_routes(extracted_folder):
 
 @app.route('/')
 def index():
-    return 'aaa'
+    #return "a"
     """ 初期画面: 組織とフィードを選択する画面を表示 """
     # JSONファイルを読み込んで、organization_nameのリストとfeed_dataを取得
     with open('response_data.json', 'r', encoding='utf-8') as json_file:
@@ -131,4 +131,5 @@ def process_route():
     return f'Selected route_long_name: {selected_route}, Operation status: {operation_status}'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+

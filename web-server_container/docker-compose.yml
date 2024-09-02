@@ -32,12 +32,15 @@ services:
       - ./nginx/html:/usr/share/nginx/html
     restart: always
     ports: [ "8080:80" ]
-    depends_on: [ "php" ]
+    depends_on: [ "php", "python" ]
 
   python:
     image: python:3.12
     volumes:
       - ./python-app:/app
     working_dir: /app
-    command: bash -c "pip install -r library.txt && python read_web.py"
+    command: >
+      bash -c "pip install Flask requests && python read_web.py"
     restart: always
+    environment:
+      DISPLAY: host.docker.internal:0.0
