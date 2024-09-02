@@ -1,0 +1,16 @@
+1. "docker-compose.yml"を自分の好きなディレクトリに配置する。
+
+2. コマンドラインで、docker-compose.ymlファイルがあるディレクトリに移動する。
+
+3. 移動したディレクトリで"docker-compose up -d"コマンドを叩く。
+
+4. エラーが発生するが一旦無視して、コマンドを実行したディレクトリを確認すると、いくつかディレクトリができているはず。
+
+5. 生成されたディレクトリのnginx/con.dにでdefault.confを配置する。(用意しているものを使用してねぇ)
+
+6. nginx/htmlディレクトリにindex.htmlを配置する。(用意しているものを使用するか、自分で好きなhtmlファイルを使用してねぇ)
+
+7. もう一度"docker-compose up -d"コマンドを叩く。
+
+8. localhost:8080にNginxのWebサーバ、localhost:8888にmysql_adminのログインページが立ち上がっている。(はず！)
+
