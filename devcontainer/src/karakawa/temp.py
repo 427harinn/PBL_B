@@ -3,33 +3,8 @@ import requests
 import json
 import zipfile
 import os
-import csv
 
 app = Flask(__name__)
-
-def process_extracted_files_for_routes(extracted_folder):
-    #ルート選択画面の処理　パスワードを付けたりしたい場合はここで処理を書くといいかも
-    routes_file_path = None
-    route_long_names = []
-
-    # 解凍されたフォルダ内を探索し、routes.txtファイルを探す
-    for root, dirs, files in os.walk(extracted_folder):
-        for file in files:
-            if file == 'routes.txt':
-                routes_file_path = os.path.join(root, file)
-                break
-
-    if routes_file_path:
-        print(f"routes.txt found: {routes_file_path}")
-        # routes.txt の内容を読み込み、route_long_nameをリストに追加
-        with open(routes_file_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                route_long_names.append(row['route_long_name'])
-    else:
-        print("routes.txt file not found.")
-
-    return route_long_names
 
 @app.route('/')
 def index():
@@ -103,26 +78,11 @@ def get_feed():
         with zipfile.ZipFile(zip_filename, 'r') as zip_ref:
             zip_ref.extractall(extracted_folder)
 
-        # 解凍後の処理（route_long_nameをリストで取得）
-        route_long_names = process_extracted_files_for_routes(extracted_folder)
+        # 解凍後の処理をここに記述（必要に応じて）
 
-        if route_long_names:
-            return render_template('select_route.html', route_long_names=route_long_names)
-        else:
-            return "routes.txt ファイルが見つかりませんでした。"
-        
+        return "フィードファイルが正常に解凍され、内部処理が完了しました。"
     else:
         return f'Failed to retrieve feed data: {response.status_code}', 400
-
-@app.route('/process_route', methods=['POST'])
-def process_route():
-    selected_route = request.form['route_long_name']
-    operation_status = request.form['operation_status']
-    
-    # 選択されたルートと運行ステータスに基づいて次の処理を行う
-    # ここに処理内容を追加します
-    return f'Selected route_long_name: {selected_route}, Operation status: {operation_status}'
-
 
 if __name__ == '__main__':
     app.run(debug=True)
