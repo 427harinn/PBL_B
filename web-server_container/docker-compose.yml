@@ -39,5 +39,5 @@ services:
     volumes:
       - ./python-app:/app
     working_dir: /app
-    command: bash -c "pip install -r library.txt　&& python read_web.py"
+    command: bash -c "pip install -r library.txt && python read_web.py"
     restart: always
