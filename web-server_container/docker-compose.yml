@@ -6,7 +6,7 @@ services:
       - ./db/mysql:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root_pass_fB3uWvTS
+      MYSQL_ROOT_PASSWORD: password
     platform: linux/x86_64
 
   phpmyadmin:
@@ -39,7 +39,6 @@ services:
     ports: ["8889:80"]
     volumes:
       - ./htdocs:/usr/local/apache2/htdocs
-      #- ./conf:/usr/local/apache2/conf
 
   python:
     image: python:3.12
