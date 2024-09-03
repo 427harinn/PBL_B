@@ -4,6 +4,7 @@ services:
     image: mysql:5.7
     volumes:
       - ./db/mysql:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf #日本語対応
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -33,12 +34,14 @@ services:
     restart: always
     ports: [ "8080:80" ]
     depends_on: [ "php", "python" ]
-    #   httpd:
-    #     image: httpd:2.4
-    #     ports: [ "8889:80" ]
-    #     volumes:
-    #       - ./htdocs:/usr/local/apache2/htdocs
-    #depends_on: [ "php", "python" ]
+
+  httpd:
+    image: php:7.4-apache
+    ports: [ "8889:80" ]
+    volumes:
+      - ./htdocs:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    depends_on: [ "db" ]
 
   python:
     image: python:3.12
