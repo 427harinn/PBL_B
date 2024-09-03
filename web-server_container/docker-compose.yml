@@ -33,12 +33,12 @@ services:
     restart: always
     ports: [ "8080:80" ]
     depends_on: [ "php", "python" ]
-
-  httpd:
-    image: httpd:2.4
-    ports: ["8889:80"]
-    volumes:
-      - ./htdocs:/usr/local/apache2/htdocs
+    #   httpd:
+    #     image: httpd:2.4
+    #     ports: [ "8889:80" ]
+    #     volumes:
+    #       - ./htdocs:/usr/local/apache2/htdocs
+    #depends_on: [ "php", "python" ]
 
   python:
     image: python:3.12
@@ -46,7 +46,7 @@ services:
       - ./python-app:/app
     working_dir: /app
     command: >
-      bash -c "pip install Flask requests && python read_web.py"
+      bash -c "pip install Flask requests && python read_web.py && python app.py"
     restart: always
     environment:
       DISPLAY: host.docker.internal:0.0
