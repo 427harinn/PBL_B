@@ -44,6 +44,9 @@ services:
     depends_on: [ "db" ]
     environment:
       PHP_INI_SCAN_DIR: "/usr/local/etc/php/conf.d"
+    command: >
+      bash -c "docker-php-ext-install mysqli && docker-php-ext-enable mysqli && apache2-foreground"
+
 
   python:
     image: python:3.12
