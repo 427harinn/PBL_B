@@ -18,17 +18,25 @@
                 <input type="date" id="operation_date" name="operation_date">
             </div>
             <div class="form-group">
-                <label for="agency_name"><i class="fas fa-building"></i> バス会社を選択してください:</label>
+                <label for="agency_name"><i class="fas fa-building"></i> 市町村名を選択してください:</label>
                 <select id="agency_name" onchange="updateFeeds()">
+                    <option value="" selected disabled>市町村名を選択してください</option>
                     <!-- バス会社のオプションがここに入ります -->
                 </select>
             </div>
             <div class="form-group">
-                <label for="feed_name"><i class="fas fa-list"></i> フィードを選択してください:</label>
+                <label for="feed_name"><i class="fas fa-list"></i> バス会社を選択してください:</label>
                 <select id="feed_name">
+                    <option value="" selected disabled>バス会社を選択してください</option>
                     <!-- フィードのオプションがここに入ります -->
                 </select>
             </div>
+            <!--
+            <div class="form-group">
+                <label for="feed_password"><i class="fas fa-lock"></i> パスワード:</label>
+                <input type="password" id="feed_password" placeholder="フィードのパスワードを入力してください">
+            </div>
+        -->
             <button onclick="showRouteSelection()"><i class="fas fa-arrow-right"></i> 路線選択へ進む</button>
         </div>
 
@@ -88,6 +96,17 @@
         async function showRouteSelection() {
             const feedSelect = document.getElementById("feed_name");
             const selectedFeed = feedSelect.value;
+            //const enteredPassword = document.getElementById("feed_password").value;
+            /*
+            // パスワード検証
+            const passwordResponse = await fetch(`check_password.php?feed_id=${selectedFeed}&password=${encodeURIComponent(enteredPassword)}`);
+            const passwordCheck = await passwordResponse.json();
+
+            if (!passwordCheck.success) {
+                alert('パスワードが間違っています。');
+                return; // パスワードが間違っている場合、次の画面に進まない
+            }
+*/
             const routeTable = document.getElementById("routeTable").getElementsByTagName('tbody')[0];
             const selectedDate = document.getElementById("operation_date").value;
 
@@ -100,32 +119,33 @@
 
             routes.forEach((route, index) => {
                 const row = routeTable.insertRow();
-                row.setAttribute('data-route-id', route.route_id);
+                row.setAttribute('data-route-id', route.route_id);  // route_idを行に保存
                 const routeCell = row.insertCell(0);
                 const statusCell = row.insertCell(1);
                 const noteCell = row.insertCell(2);
 
                 routeCell.textContent = route.route_name;
                 statusCell.innerHTML = `
-                    <div class="radio-group">
-                        <label class="normal">
-                            <input type="radio" name="status_${index}" value="normal" checked>
-                            <i class="fas fa-check-circle"></i> 通常運行
-                        </label>
-                        <label class="suspended">
-                            <input type="radio" name="status_${index}" value="suspended">
-                            <i class="fas fa-times-circle"></i> 運休
-                        </label>
-                    </div>
-                `;
+            <div class="radio-group">
+                <label class="normal">
+                    <input type="radio" name="status_${index}" value="normal" checked>
+                    <i class="fas fa-check-circle"></i> 通常運行
+                </label>
+                <label class="suspended">
+                    <input type="radio" name="status_${index}" value="suspended">
+                    <i class="fas fa-times-circle"></i> 運休
+                </label>
+            </div>
+        `;
                 noteCell.innerHTML = `
-                    <textarea id="note_${index}" placeholder="メモを入力"></textarea>
-                `;
+            <textarea id="note_${index}" placeholder="メモを入力"></textarea>
+        `;
             });
 
             document.getElementById("initialPage").style.display = "none";
             document.getElementById("routeSelection").style.display = "block";
         }
+
 
         async function submitRouteStatus() {
             const selectedDate = document.getElementById("operation_date").value;
@@ -152,7 +172,13 @@
             } else {
                 alert('データの保存に失敗しました。');
             }
+
+            // デバッグ情報をコンソールに出力
+            if (result.debug) {
+                result.debug.forEach(msg => console.log(msg));
+            }
         }
+
 
         // ページ読み込み時にバス会社を読み込む
         document.addEventListener('DOMContentLoaded', () => {

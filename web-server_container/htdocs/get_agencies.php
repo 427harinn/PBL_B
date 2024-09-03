@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // データベース接続情報
-$servername = "localhost";
+$servername = "db";
 $username = "root";
 $password = "password";
 $dbname = "operation";
