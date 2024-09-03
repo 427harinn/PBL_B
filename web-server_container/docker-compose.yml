@@ -25,15 +25,32 @@ services:
       - ./nginx/html:/usr/share/nginx/html
       - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
     depends_on: [ "db" ]
+    environment:
+      PHP_INI_SCAN_DIR: "/usr/local/etc/php/conf.d"
+    command: >
+      bash -c "docker-php-ext-install mysqli && docker-php-ext-enable mysqli && php-fpm"
+    #nginx:
+    #image: nginx:latest
+    #volumes:
+    #- ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    #- ./nginx/html:/usr/share/nginx/html
+    #restart: always
+    #ports: [ "8080:80" ]
+    #depends_on: [ "php", "python" ]
+    #command: >
+    #bash -c "docker-php-ext-install mysqli && docker-php-ext-enable mysqli && apt install php"
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx/html:/usr/share/nginx/html
-    restart: always
+  apache:
+    image: php:7.4-apache
     ports: [ "8080:80" ]
-    depends_on: [ "php", "python" ]
+    volumes:
+      - ./apache:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    depends_on: [ "db" ]
+    environment:
+      PHP_INI_SCAN_DIR: "/usr/local/etc/php/conf.d"
+    command: >
+      bash -c "docker-php-ext-install mysqli && docker-php-ext-enable mysqli && apache2-foreground"
 
   httpd:
     image: php:7.4-apache
