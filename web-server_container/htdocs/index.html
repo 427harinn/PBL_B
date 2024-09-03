@@ -129,6 +129,12 @@
 
         function showRouteSelection() {
             const feedSelect = document.getElementById("feed_name");
+            const selectedFeedName = feedSelect.options[feedSelect.selectedIndex].text;
+
+            // 選択された feed_name を localStorage に保存
+            localStorage.setItem('selectedFeedName', selectedFeedName);
+
+
             const selectedFeed = feedSelect.value;
             const routeTable = document.getElementById("routeTable").getElementsByTagName('tbody')[0];
             const selectedDate = document.getElementById("operation_date").value;
@@ -172,6 +178,11 @@
         // 「路線選択へ進む」ボタンにポップアップを表示する機能を紐づけ
         document.querySelector('button[onclick="showRouteSelection()"]').setAttribute('onclick', 'showPasswordPopup()');
 
+
+        function goToPasswordChange() {
+            // パスワード変更画面に遷移するためのURLに置き換えてください
+            window.location.href = "password_change.html";
+        }
 
 
         async function submitRouteStatus() {
