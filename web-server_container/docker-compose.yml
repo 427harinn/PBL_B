@@ -36,10 +36,12 @@ services:
     depends_on: [ "php", "python" ]
 
   httpd:
-    image: httpd:2.4
+    image: php:7.4-apache
     ports: ["8889:80"]
     volumes:
-      - ./htdocs:/usr/local/apache2/htdocs
+      - ./htdocs:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    depends_on: [ "db" ]
 
   python:
     image: python:3.12
@@ -51,3 +53,4 @@ services:
     restart: always
     environment:
       DISPLAY: host.docker.internal:0.0
+
