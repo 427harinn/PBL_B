@@ -1,0 +1,39 @@
+-- create database
+CREATE DATABASE operation;
+
+-- USE
+USE operation;
+
+-- create table
+-- Agency TABLE
+CREATE TABLE Agency (
+    agency_id INTEGER NOT NULL,
+    agency_name VARCHAR(8) NOT NULL,
+    PRIMARY KEY(agency_id)
+);
+
+-- Feed TABLE
+CREATE TABLE Feed (
+    feed_id INTEGER NOT NULL,
+    feed_name VARCHAR(64) NOT NULL,
+    agency_id INTEGER NOT NULL,
+    password INTEGER NOT NULL,
+    PRIMARY KEY(feed_id)
+);
+
+-- Route TABLE
+CREATE TABLE Route (
+    route_id INTEGER NOT NULL,
+    route_name VARCHAR(64) NOT NULL,
+    feed_id INTEGER NOT NULL,
+    PRIMARY KEY(route_id)
+);
+
+-- Status TABLE
+CREATE TABLE Status (
+    status BOOLEAN DEFAULT TRUE NOT NULL, -- デフォルト 1
+    date DATE NOT NULL,
+    route_id INTEGER NOT NULL,
+    comment TEXT
+);
+
