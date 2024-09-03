@@ -4,6 +4,7 @@ services:
     image: mysql:5.7
     volumes:
       - ./db/mysql:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf #日本語対応
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
