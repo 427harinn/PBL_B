@@ -181,3 +181,6 @@ pyrightconfig.json
 
 # Ignore files under the extracted_files directory
 extracted_files/
+
+# Ignore everything in the web-server_container/db/mysql directory
+web-server_container/db/mysql/

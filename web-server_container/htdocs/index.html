@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バス会社運行管理システム</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="initialPage">
+            <h1><i class="fas fa-bus"></i> バス会社運行管理システム</h1>
+            <div class="form-group">
+                <label for="operation_date"><i class="fas fa-calendar-alt"></i> 運行日:</label>
+                <input type="date" id="operation_date" name="operation_date">
+            </div>
+            <div class="form-group">
+                <label for="agency_name"><i class="fas fa-building"></i> 市町村名を選択してください:</label>
+                <select id="agency_name" onchange="updateFeeds()">
+                    <option value="" selected disabled>市町村名を選択してください</option>
+                    <!-- バス会社のオプションがここに入ります -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="feed_name"><i class="fas fa-list"></i> バス会社を選択してください:</label>
+                <select id="feed_name">
+                    <option value="" selected disabled>バス会社を選択してください</option>
+                    <!-- フィードのオプションがここに入ります -->
+                </select>
+            </div>
+            <!--
+            <div class="form-group">
+                <label for="feed_password"><i class="fas fa-lock"></i> パスワード:</label>
+                <input type="password" id="feed_password" placeholder="フィードのパスワードを入力してください">
+            </div>
+        -->
+            <button onclick="showRouteSelection()"><i class="fas fa-arrow-right"></i> 路線選択へ進む</button>
+        </div>
+
+        <div id="routeSelection" style="display: none;">
+            <h1><i class="fas fa-route"></i> 路線ごとの運行状況選択</h1>
+            <h2 id="selectedDate"></h2>
+            <table id="routeTable">
+                <thead>
+                    <tr>
+                        <th>路線名</th>
+                        <th>運行状況</th>
+                        <th>メモ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 路線情報がここに表示されます -->
+                </tbody>
+            </table>
+            <button onclick="submitRouteStatus()"><i class="fas fa-save"></i> 運行状況を保存</button>
+        </div>
+    </div>
+
+    <script>
+        // ページ読み込み時にバス会社の選択肢を取得して表示
+        async function loadAgencies() {
+            const agencySelect = document.getElementById("agency_name");
+
+            const response = await fetch('get_agencies.php');
+            const agencies = await response.json();
+
+            agencies.forEach(agency => {
+                const option = document.createElement("option");
+                option.value = agency;
+                option.text = agency;
+                agencySelect.add(option);
+            });
+        }
+
+        async function updateFeeds() {
+            const agencySelect = document.getElementById("agency_name");
+            const selectedAgency = agencySelect.value;
+            const feedSelect = document.getElementById("feed_name");
+
+            feedSelect.innerHTML = "";
+
+            const response = await fetch(`get_feeds.php?agency_name=${selectedAgency}`);
+            const feeds = await response.json();
+
+            feeds.forEach(feed => {
+                const option = document.createElement("option");
+                option.value = feed.feed_id;
+                option.text = feed.feed_name;
+                feedSelect.add(option);
+            });
+        }
+
+        async function showRouteSelection() {
+            const feedSelect = document.getElementById("feed_name");
+            const selectedFeed = feedSelect.value;
+            //const enteredPassword = document.getElementById("feed_password").value;
+            /*
+            // パスワード検証
+            const passwordResponse = await fetch(`check_password.php?feed_id=${selectedFeed}&password=${encodeURIComponent(enteredPassword)}`);
+            const passwordCheck = await passwordResponse.json();
+
+            if (!passwordCheck.success) {
+                alert('パスワードが間違っています。');
+                return; // パスワードが間違っている場合、次の画面に進まない
+            }
+*/
+            const routeTable = document.getElementById("routeTable").getElementsByTagName('tbody')[0];
+            const selectedDate = document.getElementById("operation_date").value;
+
+            document.getElementById("selectedDate").textContent = `選択された日付: ${selectedDate}`;
+
+            routeTable.innerHTML = "";
+
+            const response = await fetch(`get_routes.php?feed_id=${selectedFeed}`);
+            const routes = await response.json();
+
+            routes.forEach((route, index) => {
+                const row = routeTable.insertRow();
+                row.setAttribute('data-route-id', route.route_id);  // route_idを行に保存
+                const routeCell = row.insertCell(0);
+                const statusCell = row.insertCell(1);
+                const noteCell = row.insertCell(2);
+
+                routeCell.textContent = route.route_name;
+                statusCell.innerHTML = `
+            <div class="radio-group">
+                <label class="normal">
+                    <input type="radio" name="status_${index}" value="normal" checked>
+                    <i class="fas fa-check-circle"></i> 通常運行
+                </label>
+                <label class="suspended">
+                    <input type="radio" name="status_${index}" value="suspended">
+                    <i class="fas fa-times-circle"></i> 運休
+                </label>
+            </div>
+        `;
+                noteCell.innerHTML = `
+            <textarea id="note_${index}" placeholder="メモを入力"></textarea>
+        `;
+            });
+
+            document.getElementById("initialPage").style.display = "none";
+            document.getElementById("routeSelection").style.display = "block";
+        }
+
+
+        async function submitRouteStatus() {
+            const selectedDate = document.getElementById("operation_date").value;
+            const routes = Array.from(document.querySelectorAll('#routeTable tbody tr')).map((row, index) => {
+                return {
+                    route_id: row.getAttribute('data-route-id'),
+                    status: document.querySelector(`input[name="status_${index}"]:checked`).value,
+                    note: document.getElementById(`note_${index}`).value
+                };
+            });
+
+            const response = await fetch('save_route_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ date: selectedDate, routes: routes })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`${selectedDate}の運行状況とメモが保存されました。`);
+            } else {
+                alert('データの保存に失敗しました。');
+            }
+
+            // デバッグ情報をコンソールに出力
+            if (result.debug) {
+                result.debug.forEach(msg => console.log(msg));
+            }
+        }
+
+
+        // ページ読み込み時にバス会社を読み込む
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAgencies();
+
+            // 日付入力フィールドに今日の日付をセット
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("operation_date").value = today;
+        });
+    </script>
+</body>
+
+</html>
