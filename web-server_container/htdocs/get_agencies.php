@@ -1,12 +1,13 @@
 <?php
 header('Content-Type: application/json');
 
-// データベース接続設定
+// データベース接続情報
 $servername = "localhost";
 $username = "root";
 $password = "password";
 $dbname = "operation";
 
+// データベース接続の作成
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // 接続をチェック
@@ -14,28 +15,22 @@ if ($conn->connect_error) {
     die(json_encode(['error' => "Connection failed: " . $conn->connect_error]));
 }
 
-$feed_id = $_GET['feed_id'] ?? '';
+// SQLクエリを実行してagency_nameを取得
+$sql = "SELECT agency_name FROM Agency";
+$result = $conn->query($sql);
 
-$sql = "
-SELECT r.route_id, r.route_name 
-FROM Route r
-WHERE r.feed_id = ?";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $feed_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$routes = [];
+$agencies = [];
 
 if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $routes[] = $row;
+    while($row = $result->fetch_assoc()) {
+        $agencies[] = $row['agency_name'];
     }
+} else {
+    $agencies = [];
 }
 
-$stmt->close();
 $conn->close();
 
-echo json_encode($routes);
+// 結果をJSON形式で返す
+echo json_encode($agencies);
 ?>

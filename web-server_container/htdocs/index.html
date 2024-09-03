@@ -7,7 +7,6 @@
     <title>バス会社運行管理システム</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -19,9 +18,9 @@
                 <input type="date" id="operation_date" name="operation_date">
             </div>
             <div class="form-group">
-                <label for="organization_name"><i class="fas fa-building"></i> 自治体を選択してください:</label>
-                <select id="organization_name" onchange="updateFeeds()">
-                    <!-- 自治体のオプションがここに入ります -->
+                <label for="agency_name"><i class="fas fa-building"></i> バス会社を選択してください:</label>
+                <select id="agency_name" onchange="updateFeeds()">
+                    <!-- バス会社のオプションがここに入ります -->
                 </select>
             </div>
             <div class="form-group">
@@ -53,14 +52,29 @@
     </div>
 
     <script>
+        // ページ読み込み時にバス会社の選択肢を取得して表示
+        async function loadAgencies() {
+            const agencySelect = document.getElementById("agency_name");
+
+            const response = await fetch('get_agencies.php');
+            const agencies = await response.json();
+
+            agencies.forEach(agency => {
+                const option = document.createElement("option");
+                option.value = agency;
+                option.text = agency;
+                agencySelect.add(option);
+            });
+        }
+
         async function updateFeeds() {
-            const organizationSelect = document.getElementById("organization_name");
-            const selectedOrganization = organizationSelect.value;
+            const agencySelect = document.getElementById("agency_name");
+            const selectedAgency = agencySelect.value;
             const feedSelect = document.getElementById("feed_name");
 
             feedSelect.innerHTML = "";
 
-            const response = await fetch(`get_feeds.php?agency_name=${selectedOrganization}`);
+            const response = await fetch(`get_feeds.php?agency_name=${selectedAgency}`);
             const feeds = await response.json();
 
             feeds.forEach(feed => {
@@ -86,7 +100,7 @@
 
             routes.forEach((route, index) => {
                 const row = routeTable.insertRow();
-                row.setAttribute('data-route-id', route.route_id);  // route_idを行に保存
+                row.setAttribute('data-route-id', route.route_id);
                 const routeCell = row.insertCell(0);
                 const statusCell = row.insertCell(1);
                 const noteCell = row.insertCell(2);
@@ -140,22 +154,9 @@
             }
         }
 
-        // 初期化関数の呼び出し
+        // ページ読み込み時にバス会社を読み込む
         document.addEventListener('DOMContentLoaded', () => {
-            const organizationSelect = document.getElementById("organization_name");
-
-            // 自治体のダミーデータを追加
-            const organizations = [
-                { id: "tokyo", name: "東京都" },
-                { id: "osaka", name: "大阪府" }
-            ];
-
-            organizations.forEach(org => {
-                const option = document.createElement("option");
-                option.value = org.name;
-                option.text = org.name;
-                organizationSelect.add(option);
-            });
+            loadAgencies();
 
             // 日付入力フィールドに今日の日付をセット
             const today = new Date().toISOString().split('T')[0];
