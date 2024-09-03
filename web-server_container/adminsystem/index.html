@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バス会社運行管理システム</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --danger-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        select,
+        button,
+        textarea,
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus,
+        button:focus,
+        textarea:focus,
+        input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 30px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .normal {
+            color: var(--secondary-color);
+        }
+
+        .suspended {
+            color: var(--danger-color);
+        }
+
+        #routeSelection {
+            display: none;
+        }
+
+        textarea {
+            width: calc(100% - 24px);
+            /* 100%からpaddingの合計分を引く */
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 50px;
+            box-sizing: border-box;
+            /* パディングやボーダーを含めてサイズを計算する */
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            th,
+            td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="initialPage">
+            <h1><i class="fas fa-bus"></i> バス会社運行管理システム</h1>
+            <div class="form-group">
+                <label for="operation_date"><i class="fas fa-calendar-alt"></i> 運行日:</label>
+                <input type="date" id="operation_date" name="operation_date">
+            </div>
+            <div class="form-group">
+                <label for="organization_name"><i class="fas fa-building"></i> 自治体を選択してください:</label>
+                <select id="organization_name" onchange="updateFeeds()">
+                    <!-- 自治体のオプションがここに入ります -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="feed_name"><i class="fas fa-list"></i> フィードを選択してください:</label>
+                <select id="feed_name">
+                    <!-- フィードのオプションがここに入ります -->
+                </select>
+            </div>
+            <button onclick="showRouteSelection()"><i class="fas fa-arrow-right"></i> 路線選択へ進む</button>
+        </div>
+
+        <div id="routeSelection" style="display: none;">
+            <h1><i class="fas fa-route"></i> 路線ごとの運行状況選択</h1>
+            <h2 id="selectedDate"></h2>
+            <table id="routeTable">
+                <thead>
+                    <tr>
+                        <th>路線名</th>
+                        <th>運行状況</th>
+                        <th>メモ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 路線情報がここに表示されます -->
+                </tbody>
+            </table>
+            <button onclick="submitRouteStatus()"><i class="fas fa-save"></i> 運行状況を保存</button>
+        </div>
+    </div>
+
+    <script>
+        // ダミーデータ（実際の実装では、サーバーからのデータを使用します）
+        const organizationData = {
+            "東京都": {
+                organization_id: "tokyo",
+                feeds: [
+                    { feed_id: "tokyo_metro", feed_name: "東京メトロ" },
+                    { feed_id: "toei", feed_name: "都営地下鉄" }
+                ]
+            },
+            "大阪府": {
+                organization_id: "osaka",
+                feeds: [
+                    { feed_id: "osaka_metro", feed_name: "大阪メトロ" }
+                ]
+            }
+        };
+
+        const routeData = {
+            "tokyo_metro": [
+                { name: "銀座線", note: "" },
+                { name: "丸ノ内線", note: "" },
+                { name: "日比谷線", note: "" }
+            ],
+            "toei": [
+                { name: "浅草線", note: "" },
+                { name: "三田線", note: "" },
+                { name: "新宿線", note: "" }
+            ],
+            "osaka_metro": [
+                { name: "御堂筋線", note: "" },
+                { name: "谷町線", note: "" },
+                { name: "四つ橋線", note: "" }
+            ]
+        };
+
+        // 初期化
+        function init() {
+            const organizationSelect = document.getElementById("organization_name");
+            for (const org in organizationData) {
+                const option = document.createElement("option");
+                option.value = org;
+                option.text = org;
+                organizationSelect.add(option);
+            }
+            updateFeeds();
+
+            // 日付入力フィールドに今日の日付をセット
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("operation_date").value = today;
+        }
+
+        // フィードの更新
+        function updateFeeds() {
+            const organizationSelect = document.getElementById("organization_name");
+            const selectedOrganization = organizationSelect.value;
+            const feedSelect = document.getElementById("feed_name");
+
+            feedSelect.innerHTML = "";
+
+            if (organizationData[selectedOrganization]) {
+                organizationData[selectedOrganization].feeds.forEach(feed => {
+                    const option = document.createElement("option");
+                    option.value = feed.feed_id;
+                    option.text = feed.feed_name;
+                    feedSelect.add(option);
+                });
+            }
+        }
+
+        // 路線選択画面の表示
+        function showRouteSelection() {
+            const feedSelect = document.getElementById("feed_name");
+            const selectedFeed = feedSelect.value;
+            const routeTable = document.getElementById("routeTable").getElementsByTagName('tbody')[0];
+            const selectedDate = document.getElementById("operation_date").value;
+
+            document.getElementById("selectedDate").textContent = `選択された日付: ${selectedDate}`;
+
+            routeTable.innerHTML = "";
+
+            if (routeData[selectedFeed]) {
+                routeData[selectedFeed].forEach((route, index) => {
+                    const row = routeTable.insertRow();
+                    const routeCell = row.insertCell(0);
+                    const statusCell = row.insertCell(1);
+                    const noteCell = row.insertCell(2);
+
+                    routeCell.textContent = route.name;
+                    statusCell.innerHTML = `
+                        <div class="radio-group">
+                            <label class="normal">
+                                <input type="radio" name="status_${index}" value="normal" checked>
+                                <i class="fas fa-check-circle"></i> 通常運行
+                            </label>
+                            <label class="suspended">
+                                <input type="radio" name="status_${index}" value="suspended">
+                                <i class="fas fa-times-circle"></i> 運休
+                            </label>
+                        </div>
+                    `;
+                    noteCell.innerHTML = `
+                        <textarea id="note_${index}" placeholder="メモを入力">${route.note}</textarea>
+                    `;
+                });
+            }
+
+            document.getElementById("initialPage").style.display = "none";
+            document.getElementById("routeSelection").style.display = "block";
+        }
+
+        // 運行状況の送信（ダミー関数）
+        function submitRouteStatus() {
+            const feedSelect = document.getElementById("feed_name");
+            const selectedFeed = feedSelect.value;
+            const selectedDate = document.getElementById("operation_date").value;
+            const updatedRouteData = routeData[selectedFeed].map((route, index) => {
+                const status = document.querySelector(`input[name="status_${index}"]:checked`).value;
+                const note = document.getElementById(`note_${index}`).value;
+                return {
+                    name: route.name,
+                    status: status,
+                    note: note,
+                    date: selectedDate
+                };
+            });
+
+            console.log("Updated route data:", updatedRouteData);
+            // ここで実際のデータ送信処理を行います
+            alert(`${selectedDate}の運行状況とメモが保存されました。`);
+        }
+
+        // 初期化関数の呼び出し
+        init();
+    </script>
+</body>
+
+</html>
