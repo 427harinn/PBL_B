@@ -42,6 +42,8 @@ services:
       - ./htdocs:/var/www/html
       - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
     depends_on: [ "db" ]
+    environment:
+      PHP_INI_SCAN_DIR: "/usr/local/etc/php/conf.d"
 
   python:
     image: python:3.12
