@@ -20,7 +20,7 @@ $agency_name = $_GET['agency_name'] ?? '';
 
 if ($agency_name) {
     // SQLクエリを実行してagency_nameに対応するfeed_nameを取得
-    $sql = "SELECT feed_name FROM Feed WHERE agency_id = (SELECT agency_id FROM Agency WHERE agency_name = ?)";
+    $sql = "SELECT feed_name FROM Feed WHERE agency_id = (SELECT agency_id FROM Agency WHERE agency_name = ?) AND password != 'password';";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $agency_name);
     $stmt->execute();

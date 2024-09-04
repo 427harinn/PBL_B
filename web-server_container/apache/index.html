@@ -29,9 +29,7 @@
             <select id="municipality">
                 <option value="">選択してください</option>
                 <!-- 自治体の選択肢 -->
-                <option value="municipality1">新宿区</option>
-                <option value="municipality2">渋谷区</option>
-                <option value="municipality3">池袋区</option>
+
             </select>
         </div>
 
@@ -161,7 +159,7 @@
                         const row = document.createElement('tr');
                         const cell = document.createElement('td');
                         cell.colSpan = 3;
-                        cell.textContent = "データがありません。";
+                        cell.textContent = "運休の知らせはありません。";
                         row.appendChild(cell);
                         tableBody.appendChild(row);
                     }
