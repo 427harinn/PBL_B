@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バス会社運行管理システム - 説明</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1><i class="fas fa-info-circle"></i> このサイトについて</h1>
+        <p>このページは、バス運行情報管理システムを利用する<strong>バス事業者様向け</strong>のページです。システムを利用するためには、事業者登録が必要です。以下の手順に従ってご登録ください。</p>
+
+        <h2>登録手順</h2>
+        <ul>
+            <li><strong>お問い合わせ：</strong> サイト内の「お問い合わせ」ボタンから、運営事務局にメールでご連絡ください。</li>
+            <li><strong>初期パスワードの受け取り：</strong> メール確認後、事務局より<strong>初期パスワード</strong>をお知らせします。</li>
+            <li><strong>ログイン：</strong> 受け取った初期パスワードを使用して、システムにログインしてください。</li>
+            <li><strong>初期パスワードの変更：</strong>
+                ログイン後、<strong>初期パスワードを必ず変更</strong>してください。このパスワード変更を完了しないと、正式な事業者登録が完了したことにはなりませんのでご注意ください。</li>
+        </ul>
+
+        <h2>このサイトでできること</h2>
+        <p>事業者登録を完了すると、以下の機能を利用できます:</p>
+        <ul>
+            <li><strong>運行情報の管理：</strong> 各路線の運行状況（通常運行または運休）をリアルタイムで更新・管理できます。</li>
+            <li><strong>メモの追加：</strong> 各路線に対して、必要なメモや運行状況に関する追加情報を簡単に追加できます。</li>
+            <li><strong>運行データの保存：</strong> 指定した運行日の運行状況を保存し、履歴を管理することができます。</li>
+        </ul>
+
+        <h2>重要な注意点</h2>
+        <p><strong>初期パスワードを変更しない限り、事業者登録は完了していません。</strong> パスワード変更を忘れないようにお願いいたします。</p>
+
+        <h2>パスワードのリセットについて</h2>
+        <p><strong>毎年1月1日午前0時に、全てのアカウントのパスワードは初期パスワードにリセットされます。</strong>
+            このため、リセット後に再度ログインする際は、事務局から再度初期パスワードを取得し、再度パスワード変更を行ってください。</p>
+
+        <button onclick="window.history.back()" class="back-btn"><i class="fas fa-arrow-left"></i> 戻る</button>
+    </div>
+
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 50px auto 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        p,
+        ul {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary-color);
+            font-size: 1.5em;
+        }
+
+        .back-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</body>
+
+</html>

@@ -31,13 +31,31 @@
                     <!-- フィードのオプションがここに入ります -->
                 </select>
             </div>
-            <!--
-            <div class="form-group">
-                <label for="feed_password"><i class="fas fa-lock"></i> パスワード:</label>
-                <input type="password" id="feed_password" placeholder="フィードのパスワードを入力してください">
+            <!-- パスワード入力用のポップアップ -->
+            <div id="passwordPopup" class="password-popup">
+                <div class="password-popup-content">
+                    <h2><i class="fas fa-lock"></i> パスワードを入力してください</h2>
+                    <div class="form-group">
+                        <label for="feed_password">パスワード:</label>
+                        <input type="password" id="feed_password" placeholder="パスワードを入力" class="password-input">
+                    </div>
+                    <button onclick="verifyPassword()" class="verify-btn"><i class="fas fa-check"></i> 確認</button>
+                </div>
             </div>
-        -->
+
+
+
             <button onclick="showRouteSelection()"><i class="fas fa-arrow-right"></i> 路線選択へ進む</button>
+
+            <!-- 説明ページに飛ぶボタン -->
+            <button onclick="window.location.href='description.html'" class="description-btn"><i
+                    class="fas fa-info-circle"></i></button>
+
+            <!-- 使用したい自治体は連絡くださいのメールリンク -->
+            <div class="contact-section">
+                <p>自治体登録・お問い合わせはこちら↓</p>
+                <a href="mailto:contact@example.com" class="contact-btn"><i class="fas fa-envelope"></i>お問い合わせ</a>
+            </div>
         </div>
 
         <div id="routeSelection" style="display: none;">
@@ -56,7 +74,9 @@
                 </tbody>
             </table>
             <button onclick="submitRouteStatus()"><i class="fas fa-save"></i> 運行状況を保存</button>
+            <button onclick="goToPasswordChange()"><i class="fas fa-key"></i> パスワード変更</button> <!-- 追加 -->
         </div>
+
     </div>
 
     <script>
@@ -93,20 +113,40 @@
             });
         }
 
-        async function showRouteSelection() {
+        function showPasswordPopup() {
+            document.getElementById("passwordPopup").style.display = "block";
+        }
+
+        async function verifyPassword() {
             const feedSelect = document.getElementById("feed_name");
             const selectedFeed = feedSelect.value;
-            //const enteredPassword = document.getElementById("feed_password").value;
-            /*
-            // パスワード検証
+            const enteredPassword = document.getElementById("feed_password").value;
+
             const passwordResponse = await fetch(`check_password.php?feed_id=${selectedFeed}&password=${encodeURIComponent(enteredPassword)}`);
             const passwordCheck = await passwordResponse.json();
 
-            if (!passwordCheck.success) {
+            if (passwordCheck.success) {
+                document.getElementById("passwordPopup").style.display = "none";
+                showRouteSelection(); // パスワードが正しければ路線選択画面を表示
+            } else {
                 alert('パスワードが間違っています。');
-                return; // パスワードが間違っている場合、次の画面に進まない
             }
-*/
+        }
+        function showRouteSelection() {
+            showPasswordPopup();
+        }
+
+
+
+        function showRouteSelection() {
+            const feedSelect = document.getElementById("feed_name");
+            const selectedFeedName = feedSelect.options[feedSelect.selectedIndex].text;
+
+            // 選択された feed_name を localStorage に保存
+            localStorage.setItem('selectedFeedName', selectedFeedName);
+
+
+            const selectedFeed = feedSelect.value;
             const routeTable = document.getElementById("routeTable").getElementsByTagName('tbody')[0];
             const selectedDate = document.getElementById("operation_date").value;
 
@@ -114,36 +154,45 @@
 
             routeTable.innerHTML = "";
 
-            const response = await fetch(`get_routes.php?feed_id=${selectedFeed}`);
-            const routes = await response.json();
+            fetch(`get_routes.php?feed_id=${selectedFeed}`)
+                .then(response => response.json())
+                .then(routes => {
+                    routes.forEach((route, index) => {
+                        const row = routeTable.insertRow();
+                        row.setAttribute('data-route-id', route.route_id);
+                        const routeCell = row.insertCell(0);
+                        const statusCell = row.insertCell(1);
+                        const noteCell = row.insertCell(2);
 
-            routes.forEach((route, index) => {
-                const row = routeTable.insertRow();
-                row.setAttribute('data-route-id', route.route_id);  // route_idを行に保存
-                const routeCell = row.insertCell(0);
-                const statusCell = row.insertCell(1);
-                const noteCell = row.insertCell(2);
+                        routeCell.textContent = route.route_name;
+                        statusCell.innerHTML = `
+                    <div class="radio-group">
+                        <label class="normal">
+                            <input type="radio" name="status_${index}" value="normal" checked>
+                            <i class="fas fa-check-circle"></i> 通常運行
+                        </label>
+                        <label class="suspended">
+                            <input type="radio" name="status_${index}" value="suspended">
+                            <i class="fas fa-times-circle"></i> 運休
+                        </label>
+                    </div>
+                `;
+                        noteCell.innerHTML = `<textarea id="note_${index}" placeholder="メモを入力"></textarea>`;
+                    });
 
-                routeCell.textContent = route.route_name;
-                statusCell.innerHTML = `
-            <div class="radio-group">
-                <label class="normal">
-                    <input type="radio" name="status_${index}" value="normal" checked>
-                    <i class="fas fa-check-circle"></i> 通常運行
-                </label>
-                <label class="suspended">
-                    <input type="radio" name="status_${index}" value="suspended">
-                    <i class="fas fa-times-circle"></i> 運休
-                </label>
-            </div>
-        `;
-                noteCell.innerHTML = `
-            <textarea id="note_${index}" placeholder="メモを入力"></textarea>
-        `;
-            });
+                    document.getElementById("initialPage").style.display = "none";
+                    document.getElementById("routeSelection").style.display = "block";
+                })
+                .catch(error => console.error('Error fetching routes:', error));
+        }
 
-            document.getElementById("initialPage").style.display = "none";
-            document.getElementById("routeSelection").style.display = "block";
+        // 「路線選択へ進む」ボタンにポップアップを表示する機能を紐づけ
+        document.querySelector('button[onclick="showRouteSelection()"]').setAttribute('onclick', 'showPasswordPopup()');
+
+
+        function goToPasswordChange() {
+            // パスワード変更画面に遷移するためのURLに置き換えてください
+            window.location.href = "password_change.html";
         }
 
 
@@ -192,3 +241,73 @@
 </body>
 
 </html>
+
+<style>
+    .container {
+        position: relative;
+        /* 子要素を絶対位置で配置するために必要 */
+        width: 90%;
+        max-width: 1200px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .description-btn {
+        position: absolute;
+        /* コンテナ内での絶対位置 */
+        top: 1px;
+        /* 上からの距離 */
+        right: 15px;
+        /* 右からの距離 */
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px;
+        border-radius: 50%;
+        font-size: 1.0em;
+        /* ボタンのサイズを調整 */
+        width: 40px;
+        /* ボタンの幅 */
+        height: 40px;
+        /* ボタンの高さ（正円にするため） */
+        display: flex;
+        /* アイコンを中央揃えにする */
+        align-items: center;
+        /* 縦中央揃え */
+        justify-content: center;
+        /* 横中央揃え */
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .description-btn:hover {
+        background-color: var(--secondary-color);
+    }
+
+
+
+    .contact-section {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .contact-btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .contact-btn:hover {
+        background-color: var(--secondary-color);
+    }
+</style>
