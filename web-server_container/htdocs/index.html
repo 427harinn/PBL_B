@@ -44,7 +44,18 @@
             </div>
 
 
+
             <button onclick="showRouteSelection()"><i class="fas fa-arrow-right"></i> 路線選択へ進む</button>
+
+            <!-- 説明ページに飛ぶボタン -->
+            <button onclick="window.location.href='description.html'" class="description-btn"><i
+                    class="fas fa-info-circle"></i></button>
+
+            <!-- 使用したい自治体は連絡くださいのメールリンク -->
+            <div class="contact-section">
+                <p>自治体登録・お問い合わせはこちら↓</p>
+                <a href="mailto:contact@example.com" class="contact-btn"><i class="fas fa-envelope"></i>お問い合わせ</a>
+            </div>
         </div>
 
         <div id="routeSelection" style="display: none;">
@@ -230,3 +241,73 @@
 </body>
 
 </html>
+
+<style>
+    .container {
+        position: relative;
+        /* 子要素を絶対位置で配置するために必要 */
+        width: 90%;
+        max-width: 1200px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .description-btn {
+        position: absolute;
+        /* コンテナ内での絶対位置 */
+        top: 1px;
+        /* 上からの距離 */
+        right: 15px;
+        /* 右からの距離 */
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px;
+        border-radius: 50%;
+        font-size: 1.0em;
+        /* ボタンのサイズを調整 */
+        width: 40px;
+        /* ボタンの幅 */
+        height: 40px;
+        /* ボタンの高さ（正円にするため） */
+        display: flex;
+        /* アイコンを中央揃えにする */
+        align-items: center;
+        /* 縦中央揃え */
+        justify-content: center;
+        /* 横中央揃え */
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .description-btn:hover {
+        background-color: var(--secondary-color);
+    }
+
+
+
+    .contact-section {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .contact-btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .contact-btn:hover {
+        background-color: var(--secondary-color);
+    }
+</style>

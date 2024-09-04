@@ -209,6 +209,8 @@ textarea {
     background-color: #27ae60;
 }
 
+
+
 @media (max-width: 768px) {
     .container {
         width: 95%;
