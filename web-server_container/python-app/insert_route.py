@@ -4,7 +4,7 @@ import zipfile
 import os
 import mysql.connector
 
-# MySQLサーバーの設定
+#---------------- MySQLサーバーの設定 ----------------#
 config = {
     'host': 'web-server_container-db-1',
     'user': 'root',
@@ -12,7 +12,9 @@ config = {
     'database': 'operation',
 }
 conn = None
+#----------------  ----------------#
 
+#---------------- gtfsを読み込む ----------------#
 # JSONファイルを読み込む
 with open('response_data.json', 'r', encoding='utf-8') as json_file:
     data = json.load(json_file)
@@ -39,7 +41,31 @@ for item in data['body']:
 organization_names = sorted(organization_names)
 sorted_feed_data = sorted(feed_data.items(), key=lambda x: x[0])
 feed_data = dict(sorted_feed_data)
+#----------------  ----------------#
 
+#---------------- データ初期化 ----------------#
+conn = None
+try:
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+
+    # SQLクエリの作成
+    truncate_query = "TRUNCATE TABLE Route"
+
+
+    cursor.execute(truncate_query)
+    conn.commit()
+
+    print("データ初期化完了！")
+except mysql.connector.Error as err:
+    print(f"エラー: {err}")
+finally:
+    if conn and conn.is_connected():
+        conn.close()
+        print("接続が閉じられました。\n\n")
+#----------------  ----------------#
+
+#---------------- DBに登録 ----------------#
 route_id = 0
 feed_num = 0
 # フィードデータの処理
@@ -117,10 +143,11 @@ for details in feed_data.values():
                     # MySQL接続のクローズ
                     if conn and conn.is_connected():
                         conn.close()
-                        print("接続が閉じられました。")
+                        print("接続が閉じられました。\n")
             else:
                 print(f"{routes_file_path} が見つかりませんでした。")
 
         else:
             print(f'Failed to retrieve feed data: {response.status_code}')
             print(response.text)  # エラーメッセージの内容を表示
+#----------------  ----------------#
